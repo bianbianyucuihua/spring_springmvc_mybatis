@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongyi.dao.AccountDao">
+    <select id="findAccountAll" resultMap="accountUser">
+        select a.id aid,a.uid,a.money,u.id,u.username,u.sex,u.address,u.birthday from account a,
+        user u where a.uid=u.id
+    </select>
+
+    <resultMap id="accountUser" type="account">
+        <id property="id" column="aid"></id>
+        <result property="uid" column="uid"></result>
+        <result property="money" column="money"></result>
+        <association property="user" column="uid" javaType="user">
+            <id property="id" column="id"></id>
+            <result property="username" column="username"></result>
+            <result property="sex" column="sex"></result>
+            <result property="address" column="address"></result>
+            <result property="birthday" column="birthday"></result>
+        </association>
+    </resultMap>
+
+
+
+    <select id="findAccountUserAll" resultType="accountUser">
+        select a.id as aid,a.MONEY,u.*  from account a,user u where a.UID=u.id
+    </select>
+
+</mapper>

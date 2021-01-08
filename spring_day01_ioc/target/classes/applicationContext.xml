@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+        bean的作用域（Scope）
+            singleton:单例
+            prototype：原型（多例）
+
+        bean对象的生命周期
+            初始化:需要指定初始化方法  init-method指定初始化方法
+            活着
+            消亡：需要指定销毁的方法    destroy-method指定销毁方法
+        注意：当对象的作用域是单例时，容器销毁（调用close方法）则对象就销毁，
+              当对象的作用域是多例时，容器销毁对象也不会销毁
+
+         bean对象的延迟加载
+            立即加载：Spring容器读取完配置文件以后就立即创建了配置文件中配置的bean对象
+            延迟加载：Spring容器读取完配置文件，等待调用对象时才给你创建对象
+            默认单例时，Spring容器采用了立即加载，默认多例时，Spring容器采用延迟加载
+            使用bean标签的属性:lazy-init可以设置是否延迟加载
+
+         依赖注入：
+            构造器注入：使用构造方法对成员变量进行初始化赋值
+            在bean标签内部使用constructor-arg标签进行构造注入
+                type:参数的类型
+                index:参数的索引，从零开始
+                name:形参的名字(重点)
+                ==================================
+                value：表示参数具体的值
+                ref：表示bean对象映射的值（重点）
+
+            set注入
+                注入的值：基本数据类型、引用数据类型（bean）、集合
+                使用依赖成员的set方法进行注入
+    -->
+   <bean id="userDao" class="com.hongyi.dao.impl.UserDaoImpl" scope="singleton"
+     init-method="init" destroy-method="destory" lazy-init="true">
+    </bean>
+    <bean id="userService" class="com.hongyi.service.impl.UserServiceImpl">
+        <constructor-arg index="0" ref="userDao"></constructor-arg>
+    </bean>
+    <!--<bean id="dao" class="com.hongyi.dao.impl.UserDaoImpl"></bean>-->
+    <!--构造器注入-->
+    <!--    <bean id="user" class="com.hongyi.pojo.User">
+        <constructor-arg type="java.lang.Double" value="100"></constructor-arg>
+        <constructor-arg type="java.lang.Double" value="1500"></constructor-arg>
+        <constructor-arg index="0" value="10"></constructor-arg>
+        <constructor-arg name="birthday" ref="date"></constructor-arg>
+        <constructor-arg name="name" value="周进"></constructor-arg>
+    </bean>-->
+    <bean id="date" class="java.util.Date">
+        <constructor-arg name="year" value="102"></constructor-arg>
+        <constructor-arg name="month" value="11"></constructor-arg>
+        <constructor-arg name="date" value="10"></constructor-arg>
+    </bean>
+
+    <!--set注入-->
+    <bean id="user" class="com.hongyi.pojo.User">
+        <property name="id" value="20"></property>
+        <property name="name" value="潘进"></property>
+        <property name="money" value="800"></property>
+        <property name="score" value="75"></property>
+        <property name="birthday" ref="date"></property>
+        <property name="list">
+            <list>
+                <value>郑佳鑫</value>
+                <value>20</value>
+                <value>女</value>
+            </list>
+        </property>
+        <property name="set">
+            <set>
+                <value>郑鑫鑫</value>
+                <value>21</value>
+                <value>男</value>
+                <value>男</value>
+            </set>
+        </property>
+        <property name="map">
+            <map>
+                <entry key="name" value="郑星星"></entry>
+                <entry key="age" value="22"></entry>
+                <entry key="sex" value="女"></entry>
+                <entry key="sex" value="男"></entry>
+            </map>
+        </property>
+        <property name="p">
+            <props>
+                <prop key="name">郑AA</prop>
+                <prop key="age">23</prop>
+                <prop key="sex">男</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

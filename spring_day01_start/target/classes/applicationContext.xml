@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--利用无参构造方法创建对象-->
+    <bean id="userService" class="com.hongyi.service.impl.UserServiceImpl"></bean>
+    <bean id="userDao" class="com.hongyi.dao.impl.UserDaoImpl"></bean>
+    <!--使用静态工厂创建对象-->
+    <bean id="demo01" class="com.hongyi.demo.Demo01" factory-method="createInstance"></bean>
+
+    <bean id="demo02Factory" class="com.hongyi.demo.Demo02Factory"></bean>
+    <bean id="demo02" factory-bean="demo02Factory" factory-method="getDemo02"></bean>
+</beans>

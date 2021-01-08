@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--
+        url:统一资源定位符   ip:端口号/URI?name=admin
+        URI:统一资源标识符
+    -->
+    <!--<properties resource="jdbc.properties" url="file:///E:\javaWorkSpace\intelliJIDEAWorkSpace\mybatis\mybatis_day02_start\src\main\resources\jdbc.properties" >-->
+    <properties url="file:///E:\javaWorkSpace\intelliJIDEAWorkSpace\mybatis\mybatis_day02_start\src\main\resources\jdbc.properties" >
+        <!--<property name="jdbc.driver" value="com.mysql.jdbc.Driver"></property>
+        <property name="jdbc.url" value="jdbc:mysql://localhost:3306/mydb"></property>
+        <property name="jdbc.username" value="root"></property>
+        <property name="jdbc.password" value="123456"></property>-->
+    </properties>
+
+    <typeAliases>
+        <!--<typeAlias type="com.hongyi.pojo.User" alias="user"></typeAlias>-->
+        <package name="com.hongyi.pojo"></package>
+    </typeAliases>
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"></property>
+                <property name="url" value="${jdbc.url}"></property>
+                <property name="username" value="${jdbc.username}"></property>
+                <property name="password" value="${jdbc.password}"></property>
+                <!--<property name="poolMaximumActiveConnections" value="${jdbc.MaxActive}"></property>
+                <property name="poolMaximumIdleConnections" value="${jdbc.MaxIdle}"></property>-->
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!--<mapper resource="com/hongyi/dao/UserDao.xml"></mapper>-->
+        <package name="com.hongyi.dao"></package>
+        <!--<package name="mapper"></package>-->
+    </mappers>
+</configuration>

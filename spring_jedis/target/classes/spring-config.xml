@@ -1,0 +1,47 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <context:component-scan base-package="com.hongyi"></context:component-scan>
+
+    <context:property-placeholder location="classpath:jedis.properties"></context:property-placeholder>
+    <!--配置redis的连接信息-->
+    <bean id="configuration" class="org.springframework.data.redis.connection.RedisStandaloneConfiguration">
+        <property name="hostName" value="${redis.ip}"></property>
+        <property name="port" value="${redis.port}"></property>
+    </bean>
+    <!--配置redis连接工厂-->
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <constructor-arg name="standaloneConfig" ref="configuration"></constructor-arg>
+    </bean>
+    <!--创建spring-redis模板-->
+    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"></property>
+    </bean>
+
+    <!--配置jackson序列化-->
+    <bean name="jackson2JsonRedisSerializer"
+          class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
+        <constructor-arg name="type" value="#{T(java.lang.Object)}"/>
+        <property name="objectMapper" value="#{T(com.hongyi.ObjectMapperFactory).objectMapper}"/>
+    </bean>
+
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"></property>
+        <property name="keySerializer" ref="jackson2JsonRedisSerializer"></property>
+        <property name="valueSerializer" ref="jackson2JsonRedisSerializer"></property>
+        <property name="hashKeySerializer" ref="jackson2JsonRedisSerializer"></property>
+        <property name="hashValueSerializer" ref="jackson2JsonRedisSerializer"></property>
+    </bean>
+</beans>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongyi.dao.UserDao">
+    <select id="findAll" resultType="user" parameterType="String">
+        select * from user
+        <if test="value!=null or value!=''">
+            where username like '%${value}%'
+        </if>
+    </select>
+    <!--username 和 sex 和 address-->
+    <select id="findUsers" resultType="user" parameterType="user">
+        select * from user
+        <where>
+            <if test="username!=null and username!=''">
+                username=#{username}
+            </if>
+            <if test="sex!=null and sex!=''">
+                and sex=#{sex}
+            </if>
+            <if test="address!=null and address!=''">
+                and address=#{address}
+            </if>
+        </where>
+    </select>
+
+    <!--username 和 sex 和 address-->
+    <select id="findUsers1" parameterType="user" resultType="user">
+        select * from user
+        <where>
+            <choose>
+                <when test="username!=null and username!=''">
+                    username=#{username}
+                </when>
+                <when test="sex!=null and sex!=''">
+                    sex=#{sex}
+                </when>
+                <when test="address!=null and address!=''">
+                    address=#{address}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <update id="updateUserById" parameterType="user">
+        update user
+        <set>
+            <if test="username!=null and username!=''">
+                username=#{username},
+            </if>
+            <if test="sex!=null and sex!=''">
+                sex=#{sex},
+            </if>
+            <if test="address!=null and address!=''">
+                address=#{address}
+            </if>
+        </set>
+       where id=#{id}
+    </update>
+
+    <delete id="deleteUserByIds" parameterType="int">
+        delete from user where id in
+        <foreach collection="list" item="a" open="(" close=")" separator=",">
+            #{a}
+        </foreach>
+    </delete>
+</mapper>

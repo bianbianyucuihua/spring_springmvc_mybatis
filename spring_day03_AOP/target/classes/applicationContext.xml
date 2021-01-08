@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--持久层对象-->
+    <bean id="userDao" class="com.hongyi.dao.impl.UserDaoImpl"></bean>
+    <!--业务层对象-->
+    <bean id="userService" class="com.hongyi.service.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao"></property>
+    </bean>
+    <!--配置通知类-->
+    <bean id="advice" class="com.hongyi.util.TransactionAdvice"></bean>
+        <!--
+
+        public void com.hongyi.service.impl.UserServiceImpl.findAll()
+        int com.hongyi.service.impl.UserServiceImpl.findAll()
+        * com.hongyi.service.impl.*.*()
+        * com.hongyi.service.impl.*.*(..)
+        -->
+    <aop:config>
+        <aop:pointcut id="pt" expression="execution(* com.hongyi.service.impl.*.findAll())"></aop:pointcut>
+        <aop:aspect id="pt1" ref="advice">
+            <!--<aop:pointcut id="pt" expression="execution(* com.hongyi.service.impl.*.findAll())"></aop:pointcut>-->
+            <!--<aop:before method="beginTransaction" pointcut-ref="pt"></aop:before>
+            <aop:after-returning method="commit" pointcut-ref="pt" ></aop:after-returning>
+            <aop:after-throwing method="rollback" pointcut-ref="pt" ></aop:after-throwing>
+            <aop:after method="closeConnection" pointcut-ref="pt" ></aop:after>-->
+            <aop:around method="arround" pointcut-ref="pt"></aop:around>
+        </aop:aspect>
+    </aop:config>
+</beans>

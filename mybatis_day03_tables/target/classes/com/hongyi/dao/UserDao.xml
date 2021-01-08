@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongyi.dao.UserDao">
+    <select id="findUserAll" resultMap="userAccount">
+         select u.id,u.username,u.sex,u.address,u.birthday,a.id aid,a.money from account a,
+        user u where a.uid=u.id
+    </select>
+    <resultMap id="userAccount" type="user">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="sex" column="sex"></result>
+        <result property="address" column="address"></result>
+        <result property="birthday" column="birthday"></result>
+        <collection property="accounts" ofType="account" column="id">
+            <id property="id" column="aid"></id>
+            <result property="money" column="money"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findUserAndRole" resultMap="userRole">
+       select u.*,r.role_name,r.role_desc,a.money from user u
+	LEFT JOIN user_role ur
+	on u.id=ur.UID
+		LEFT JOIN role r
+		on r.ID=ur.RID
+			LEFT JOIN account a
+			on a.UID=u.id
+    </select>
+    <resultMap id="userRole" type="user">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="sex" column="sex"></result>
+        <result property="address" column="address"></result>
+        <result property="birthday" column="birthday"></result>
+        <collection property="roles" ofType="role">
+            <result property="role_name" column="role_name"></result>
+            <result property="role_desc" column="role_desc"></result>
+        </collection>
+        <collection property="accounts" ofType="account">
+            <result property="money" column="money"></result>
+        </collection>
+    </resultMap>
+</mapper>

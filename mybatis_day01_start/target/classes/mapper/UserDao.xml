@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongyi.dao.UserDao">
+    <!--查询所有-->
+    <select id="findAll" resultType="com.hongyi.pojo.User">
+        select * from user
+    </select>
+    <!--根据ID更新内容-->
+    <update id="updateUserById" parameterType="com.hongyi.pojo.User">
+        update user set address=#{address} where id=#{id}
+    </update>
+    <!--插入-->
+    <insert id="insertUser" parameterType="com.hongyi.pojo.User">
+        insert into user(username,birthday,sex,address)
+        values(#{username},#{birthday},#{sex},#{address})
+    </insert>
+    <!--根据ID删除用户-->
+    <delete id="deleteUserById" parameterType="java.lang.Integer">
+        delete from user where id=#{id}
+    </delete>
+    <!--根据ID查询用户-->
+    <select id="selectUserById" parameterType="int"
+            resultType="com.hongyi.pojo.User">
+        select * from user where id=#{id}
+    </select>
+    <!--模糊查询-->
+    <select id="findUsersByName" parameterType="String"
+            resultType="com.hongyi.pojo.User">
+         <!-- select * from user where username like #{username} -->
+         select * from user where username like '%${value}%'
+    </select>
+    <!--查询总记录数-->
+    <select id="findCount" resultType="int">
+        select count(id) from user
+    </select>
+    <!--插入一条数据并返回自增的id值-->
+    <insert id="insertUser1" parameterType="com.hongyi.pojo.User">
+        <selectKey keyProperty="id" keyColumn="id" order="AFTER"
+                   resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into user(username,birthday,sex,address)
+        values(#{username},#{birthday},#{sex},#{address})
+    </insert>
+    <!--解决实体类的属性和表中的字段不一致的问题-->
+    <select id="findUsers1" resultMap="user1">
+        select * from user
+    </select>
+    <!--对象关系映射-->
+    <resultMap id="user1" type="com.hongyi.pojo.User1">
+        <id  property="uid" column="id"></id>
+        <result property="uusername" column="username"></result>
+        <result property="usex" column="sex"></result>
+        <result property="ubirthday" column="birthday"></result>
+        <result property="uaddress" column="address"></result>
+    </resultMap>
+
+    <update id="updateUser1ById" parameterType="com.hongyi.pojo.User1">
+        update user set address=#{uaddress} where id=#{uid}
+    </update>
+
+    <select id="findUserByA" parameterType="com.hongyi.pojo.A"
+            resultType="com.hongyi.pojo.User">
+      select * from user where id=#{user.id}
+    </select>
+</mapper>
